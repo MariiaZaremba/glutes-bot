@@ -2,7 +2,7 @@ from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ApplicationBuilder, CommandHandler, CallbackQueryHandler, ContextTypes
 import os
 
-TOKEN = os.getenv("7255271740:AAErnVB4TyM3cP9H9DIFYUNmJgtN58t7CZs")  # Ми отримаємо токен з середовища
+TOKEN = os.getenv("BOT_TOKEN")  # Ми отримаємо токен з середовища
 
 challenge = [
     "День 1: 15 присідань + 10 містків",
