@@ -52,42 +52,62 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     await query.answer()
     user_id = str(query.from_user.id)
+    chat_id = query.message.chat_id
 
     if query.data == 'today':
         day = user_progress.get(user_id, 0)
         if day >= len(challenge):
-            await query.edit_message_text("Ти завершила челендж 🎉")
+            await context.bot.send_message(
+                chat_id=chat_id,
+                text="Ти завершила челендж 🎉"
+            )
         else:
             workout = challenge[day]
             keyboard = [[InlineKeyboardButton("✅ Виконано", callback_data='done')]]
-            await query.edit_message_text(f"{workout}", reply_markup=InlineKeyboardMarkup(keyboard))
+            await context.bot.send_message(
+                chat_id=chat_id,
+                text=workout,
+                reply_markup=InlineKeyboardMarkup(keyboard)
+            )
 
     elif query.data == 'done':
         user_progress[user_id] += 1
-        await query.edit_message_text("Супер! Побачимось завтра 💪")
+        await context.bot.send_message(
+            chat_id=chat_id,
+            text="Супер! Побачимось завтра 💪"
+        )
 
     elif query.data == 'info':
-        await query.edit_message_text(
-            "📘 Ось лінк на інструкцію та всі деталі:\n"
-            "[Перейти на Notion](https://silver-telephone-654.notion.site/1c93d72a013980129f93fedd04949345?pvs=4)",
+        await context.bot.send_message(
+            chat_id=chat_id,
+            text=(
+                "📘 Ось лінк на інструкцію та всі деталі:\n"
+                "[Перейти на Notion](https://silver-telephone-654.notion.site/1c93d72a013980129f93fedd04949345?pvs=4)"
+            ),
             parse_mode='Markdown'
         )
 
     elif query.data == 'remind':
         reminder_users.add(user_id)
         keyboard = [[InlineKeyboardButton("🔕 Відписатись від нагадувань", callback_data='unremind')]]
-        await query.edit_message_text(
-            "✅ Ти підписалась на щоденні нагадування!\n"
-            "Щоранку я буду надсилати тренування прямо сюди 💌",
+        await context.bot.send_message(
+            chat_id=chat_id,
+            text="✅ Ти підписалась на щоденні нагадування!\nЩоранку я буду надсилати тренування прямо сюди 💌",
             reply_markup=InlineKeyboardMarkup(keyboard)
         )
 
     elif query.data == 'unremind':
         if user_id in reminder_users:
             reminder_users.remove(user_id)
-            await query.edit_message_text("🔕 Ти успішно відписалась від щоденних нагадувань.")
+            await context.bot.send_message(
+                chat_id=chat_id,
+                text="🔕 Ти успішно відписалась від щоденних нагадувань."
+            )
         else:
-            await query.edit_message_text("❗️Тебе не було у списку підписаних.")
+            await context.bot.send_message(
+                chat_id=chat_id,
+                text="❗️Тебе не було у списку підписаних."
+            )
 
 
 # Надсилання ранкових повідомлень
